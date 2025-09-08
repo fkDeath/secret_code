@@ -409,31 +409,57 @@ namespace ETML_Secret_Code_Kyllian_gregoire
         }
         static void SHOWCUBES(int[] guess, int[] secretCode)
         {
-            
-            for (int i = 0; i < 4; i++) // We will show the colored cubes according to the guess of the user
+
+            int[] codeStatus = new int[4]; // 0 = incorrect, 1 = correct but misplaced, 2 = correct and well placed
+            int[] resultStatus = new int[4]; // To store the status of each digit in the guess
+
+
+             // First pass: check for correct and well placed digits
+
+            for (int i = 0; i < 4; i++)
             {
                 if (guess[i] == secretCode[i])
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.Write("■");
-                    Console.ResetColor();
-                    guess[i] = 0; // We set the digit to -1 to avoid counting it again
+                    resultStatus[i] = 2; // Correct and well placed
+                    codeStatus[i] = 2; // Mark this digit in the secret code as used
                 }
-                if (secretCode.Contains(guess[i]))
+            }
+            // Second pass: check for correct but misplaced digits
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (resultStatus[i] != 2) // Only check digits that are not already marked as correct and well placed
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("■");
-                    Console.ResetColor();
-                    guess[i] = 0; // We set the digit to -1 to avoid counting it again
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (guess[i] == secretCode[j] && codeStatus[j] != 2) // Check if the digit exists in the secret code and is not already used
+                        {
+                            resultStatus[i] = 1; // Correct but misplaced
+                            codeStatus[j] = 1; // Mark this digit in the secret code as used
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Display the results with colored cubes
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (resultStatus[i] == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue; // Well placed
+                }
+                else if (resultStatus[i] == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow; // Misplaced
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("■");
-                    Console.ResetColor();
-                    guess[i] = 0; // We set the digit to -1 to avoid counting it again
+                    Console.ForegroundColor = ConsoleColor.Red; // Incorrect
                 }
-
+                Console.Write("■");
+                Console.ResetColor();
             }
         }
 
