@@ -410,11 +410,6 @@ namespace ETML_Secret_Code_Kyllian_gregoire
         static void SHOWCUBES(int[] guess, int[] secretCode)
         {
             
-            int[] box1, box2, box3, box4;
-            box1[0] = 0;
-            box2[1] = 0;
-            box3[2] = 0;
-            box4[3] = 0;
             for (int i = 0; i < 4; i++) // We will show the colored cubes according to the guess of the user
             {
                 if (guess[i] == secretCode[i])
