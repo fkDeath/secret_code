@@ -171,11 +171,29 @@ namespace ETML_Secret_Code_Kyllian_gregoire
 
                         LOOSINGTIME();
 
-                        
+
                         Console.WriteLine("=== Secret Code ─ Niveau 1 ===\n");
                         SECRETCODEONE(secretCode);
                         Console.Title = "Secret Code ─ Level 1 " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3]; // We change the title of the console to show the level
-                        USERTRYING(levelChoose, userTry, guess);
+                        while (userTry < MAXTRY && !find) // While the user still have tries and didn't find the code
+                        {
+                            Console.Write($"Essai {userTry + 1}/{MAXTRY} - Entrez un code à 4 chiffres : ");
+                            tryInput = Console.ReadLine();
+                            if (tryInput.Length != 4 || !tryInput.All(char.IsDigit))
+                            {
+                                Console.WriteLine("Entrée invalide, entré un code à 4 chiffres !");
+
+                            }
+                            userTry++;
+                            guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
+                            if (guess.SequenceEqual(secretCode))
+                            {
+                                Console.WriteLine("Bravo ! Vous avez trouvé le chiffre secret");
+                                find = true;
+
+                            }
+                            SHOWCUBES(guess, secretCode);
+                        }
                         break;
                     case 2: // Level 2
                         Console.WriteLine("Vous avez choisi le niveau 2\n");
@@ -235,26 +253,30 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                         }
                     } while (answer.Trim().ToLower() != "o" && answer.Trim().ToLower() != "n");
                 }
-                do
+                else
                 {
-                    Console.WriteLine("\nVoulez-vous rejouer ? (o/n)");
-                    answer = Console.ReadLine();
-
-                    if (playAgain = answer.Trim().ToLower() == "o")
+                    do
                     {
-                        Console.Clear();
-                        Console.WriteLine("Vous allez être redirigé au menu des règles.\n");
-                        Thread.Sleep(2000);
-                    }// do automaticaly the return to the rules screen
-                    else if (playAgain = answer.Trim().ToLower() == "n")
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Merci d'avoir joué ! À bientôt.");
-                        Thread.Sleep(2000); // Wait for 2 seconds before closing
-                        playAgain = false;
+                        Console.WriteLine("\nVoulez-vous rejouer ? (o/n)");
+                        answer = Console.ReadLine();
 
-                    }
-                } while (answer.Trim().ToLower() != "o" && answer.Trim().ToLower() != "n");
+                        if (playAgain = answer.Trim().ToLower() == "o")
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Vous allez être redirigé au menu des règles.\n");
+                            Thread.Sleep(2000);
+                        }// do automaticaly the return to the rules screen
+                        else if (playAgain = answer.Trim().ToLower() == "n")
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Merci d'avoir joué ! À bientôt.");
+                            Thread.Sleep(2000); // Wait for 2 seconds before closing
+                            playAgain = false;
+
+                        }
+                    } while (answer.Trim().ToLower() != "o" && answer.Trim().ToLower() != "n");
+                }
+                
 
                 // ╚══════════════════════════════════════ End Of Level Choosen By The User ════════════════════════════════════════╝
             }
@@ -360,66 +382,6 @@ namespace ETML_Secret_Code_Kyllian_gregoire
             }
             Console.ResetColor();
             Console.Clear();
-        }
-        static void USERTRYING(int levelChoose, int userTry, int[] guess)
-        {
-
-            const int MAXTRY = 10;
-            int rightPlaced = 0;
-            int wrongPlaced = 0;
-
-            find = false;
-            switch (levelChoose)
-            {
-                case 1: // Level 1
-                    while (userTry < MAXTRY && !find)
-                    {
-                        userTry++;
-                    }
-                    break;
-                case 2: // Level 2
-                    while (userTry < MAXTRY && !find) // While the user didn't find the code and he still have tries
-                    {
-                        userTry++;
-                        
-                        while (tryInput.Length != 4 || !int.TryParse(tryInput, out _) || tryInput.Any(c => c < '1' || c > '6') || tryInput.Distinct().Count() != 4)
-                        {
-                            Console.WriteLine("Entrée invalide. Tapez 4 chiffres entre 1 et 6 sans doublons.");
-                            Console.WriteLine("Entrez votre proposition ( 4 chiffres entre 1 et 6 sans doublons ) :");
-                            tryInput = Console.ReadLine();
-                        }
-                        for (int i = 0; i < 4; i++)
-                        {
-                            guess[i] = int.Parse(tryInput[i].ToString());
-                        }
-
-                        // Check the guess against the secret code
-                        rightPlaced = 0;
-                        wrongPlaced = 0;
-
-                        for (int i = 0; i < 4; i++)
-                        {
-                            if (guess[i] == secretCode[i])
-                            {
-                                rightPlaced++;
-                            }
-                            else if (secretCode.Contains(guess[i]))
-                            {
-                                wrongPlaced++;
-                            }
-                        }
-
-                        if (rightPlaced == 4)
-                        {
-                            find = true;
-                            Console.WriteLine("\n✓ Félicitations ! Vous avez trouvé le code secret en " + userTry + " essai(s) !");
-                            Console.WriteLine("Le code secret était bien : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3]);
-                            break;
-                        }
-                        SHOWTEXT(rightPlaced, wrongPlaced);
-                    }
-            }
-
         }
     } 
 }
