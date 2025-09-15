@@ -18,18 +18,16 @@ namespace ETML_Secret_Code_Kyllian_gregoire
 
         static void Main(string[] args)
         {
-            const int MAXTRY = 10;
-            int[] guess;
+            int[] guess = new int[4];
             int[] secretCode;
-            int rightPlaced;
-            int wrongPlaced;
             int levelChoose;
             int userTry;
             bool playAgain;
             bool find;
             string input;
-            string tryInput;
             string answer;
+            userTry = 0;
+            find = true;
 
             playAgain = true;
             while (playAgain) // While the user want to play again
@@ -45,10 +43,10 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                 // ╔═════════════════════════════════════════ Rules ════════════════════════════════════════════╗
 
                 // Rules Section
-                Console.WriteLine(""); // Separator
+                Console.WriteLine(); // Separator
                 Console.WriteLine("Un Code secret a été composé aléatoirement et est composé de 4 chiffre.");
                 Console.WriteLine("À toi de le découvrire en 10 essais maximum !");
-                Console.WriteLine(""); // Separator 
+                Console.WriteLine(); // Separator 
                 Console.WriteLine("À chaque essai, tu reçois un indice selon le niveau choisis.");
 
                 Console.WriteLine(""); // Separator 
@@ -98,7 +96,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
 
                 // Level 2 and 4 Exemple
 
-                Console.WriteLine(""); // Separator
+                Console.WriteLine(); // Separator
                 Console.WriteLine("Pour les niveaux 2 et 4 avec indices discrets :\n");
 
                 Console.WriteLine("Exemple :");
@@ -124,6 +122,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
 
                 // ╔═════════════════════════════════════════ Selection Of The level ════════════════════════════════════════════╗
 
+                
                 Console.Clear();
 
 
@@ -140,7 +139,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                     Console.WriteLine("2. Intermédiaire\t( 1 à 6, sans doublons, indices discrets )");
                     Console.WriteLine("3. Avancé\t\t( 1 à 8, avec doublonsm indices visibles )");
                     Console.WriteLine("4. Expert\t\t( 1 à 9, avec doublons, indices discrets )");
-                    Console.WriteLine(""); // Separator
+                    Console.WriteLine(); // Separator
 
                     Console.WriteLine("Votre choix ( De 1 à 4 )");
 
@@ -158,79 +157,55 @@ namespace ETML_Secret_Code_Kyllian_gregoire
 
 
                 // ╔═════════════════════════════════════════ Level Choosen By The User ════════════════════════════════════════════╗
-                userTry = 0;
-                find = false;
+                
+                for (int i = 0; i < 4; i++)
+                {
+                    guess[i] = 0;
+                }
+                
 
                 Random random = new Random();
                 secretCode = new int[4];
+                Console.WriteLine("Vous avez choisi le niveau {0}\n", levelChoose);
+
+                LoosingTime();
+
+
+                Console.WriteLine("=== Secret Code ─ Niveau {0} ===\n", levelChoose);
                 switch (levelChoose) // It will be dispatch the user to the right level
                 {
 
                     case 1: // Level 1
-                        Console.WriteLine("Vous avez choisi le niveau 1\n");
+                        SecretCodeOne(secretCode);
 
-                        LOOSINGTIME();
-
-
-                        Console.WriteLine("=== Secret Code ─ Niveau 1 ===\n");
-                        SECRETCODEONE(secretCode);
                         Console.Title = "Secret Code ─ Level 1 " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3]; // We change the title of the console to show the level
-                        while (userTry < MAXTRY && !find) // While the user still have tries and didn't find the code
-                        {
-                            Console.Write($"Essai {userTry + 1}/{MAXTRY} - Entrez un code à 4 chiffres : ");
-                            tryInput = Console.ReadLine();
-                            if (tryInput.Length != 4 || !tryInput.All(char.IsDigit))
-                            {
-                                Console.WriteLine("Entrée invalide, entré un code à 4 chiffres !");
-
-                            }
-                            userTry++;
-                            guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-                            if (guess.SequenceEqual(secretCode))
-                            {
-                                Console.WriteLine("Bravo ! Vous avez trouvé le chiffre secret");
-                                find = true;
-
-                            }
-                            SHOWCUBES(guess, secretCode);
-                        }
+                        
+                        find = UserTryOne(find, guess, secretCode, levelChoose);
+                        
                         break;
                     case 2: // Level 2
-                        Console.WriteLine("Vous avez choisi le niveau 2\n");
-
-                        LOOSINGTIME();
-
-
-                        Console.WriteLine("=== Secret Code ─ Niveau 2 ===\n");
-                        SECRETCODEONE(secretCode);
+                        SecretCodeOne(secretCode);
+                        
                         Console.Title = "Secret Code ─ Level 2" + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
-
-
+                       
+                        find = UserTryTwo(find, guess, secretCode, levelChoose);
+                        
                         break;
                     case 3: // Level 3
-                        Console.WriteLine("Vous avez choisi le niveau 3\n");
-
-                        LOOSINGTIME();
-
-                        Console.WriteLine("=== Secret Code ─ Niveau 3 ===\n");
-
-                        SECRETCODETWO(secretCode);
+                        SecretCodeTwo(secretCode);
 
                         Console.Title = "Secret Code ─ Level 3" + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
-
+                       
+                        find = UserTryOne(find, guess, secretCode, levelChoose);
+                        
                         break;
                     case 4: // Level 4
-                        Console.WriteLine("Vous avez choisi le niveau 4\n");
-
-                        LOOSINGTIME();
-
-                        Console.WriteLine("=== Secret Code ─ Niveau 4 ===\n");
-                        SECRETCODETWO(secretCode);
-                        Console.Title = "Secret Code ─ Level 4 : ";
-
-
-
-
+                        SecretCodeOne(secretCode);
+                        
+                        Console.Title = "Secret Code ─ Level 4 : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
+                       
+                        find = UserTryTwo(find, guess, secretCode, levelChoose);
+                        
                         break;
                 }
                 if (!find) // If the user didn't find the secret code then
@@ -249,6 +224,9 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                         }// do automaticaly the return to the rules screen
                         else if (playAgain = answer.Trim().ToLower() == "n" || answer.Trim().ToLower() == "non" || answer == "2")
                         {
+                            Console.Clear();
+                            Console.WriteLine("Merci d'avoir joué ! À bientôt.");
+                            Thread.Sleep(2000); // Wait for 2 seconds before closing
                             playAgain = false;
                         }
                     } while (answer.Trim().ToLower() != "o" && answer.Trim().ToLower() != "n");
@@ -282,7 +260,114 @@ namespace ETML_Secret_Code_Kyllian_gregoire
             }
         }
 
-        static void SECRETCODEONE(int[] secretCode)
+        static bool UserTryOne(bool find, int[] guess, int[] secretCode, int levelChoose )
+        {
+            const byte MAXTRY = 10;
+            int userTry = 0;
+            int duplicates = 0;
+            string tryInput;
+            find = false;
+            levelChoose = 0;
+            while (userTry < MAXTRY && !find) // While the user still have tries and didn't find the code
+            {
+                Console.Write($"Essai {userTry + 1}/{MAXTRY} - Entrez un code à 4 chiffres : ");
+                tryInput = Console.ReadLine();
+                guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
+                userTry++;
+                bool reverseduplicates = (Array.IndexOf(guess, guess, 0, duplicates) >= 0);
+                if (levelChoose == 1)
+                {
+                    while (reverseduplicates)
+                    {
+                        Console.Write("Merci de ne pas mettre de doublons ! Merci de resaisir un nombre : ");
+                        tryInput = Console.ReadLine();
+                    }
+                }
+
+                if (tryInput.Length != 4 || !tryInput.All(char.IsDigit))
+                {
+                    Console.WriteLine("Entrée invalide, entré un code à 4 chiffres !");
+
+                }
+                
+                
+                ShowCubes(guess, secretCode);
+                if (guess.SequenceEqual(secretCode))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\nBravo ! Vous avez trouvé le chiffre secret");
+                    Console.ResetColor();
+                    find = true;
+
+                }
+                
+            }
+            return find;
+        }
+        static bool UserTryTwo(bool find, int[] guess, int[] secretCode, int levelChoose)
+        {
+            const byte MAXTRY = 10;
+            int userTry = 0;
+            string tryInput = "";
+            byte rightPlaced = 0;
+            byte wrongPlaced = 0;
+            int duplicates = 0;
+            bool reverseduplicates = (Array.IndexOf(guess, guess, 0, duplicates) >= 0);
+            find = false;
+            
+            while (userTry < MAXTRY && !find) // While the user still have tries and didn't find the code
+            {
+                Console.Write($"Essai {userTry + 1}/{MAXTRY} - Entrez un code à 4 chiffres : ");
+                tryInput = Console.ReadLine();
+                userTry++;
+                guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
+                if (levelChoose == 2)
+                {
+                    while (reverseduplicates)
+                    {
+                        Console.Write("Merci de ne pas mettre de doublons ! Merci de resaisir un nombre : ");
+                        tryInput = Console.ReadLine();
+                    }
+                }
+                
+                if (tryInput.Length != 4 || !tryInput.All(char.IsDigit))
+                {
+                    Console.WriteLine("Entrée invalide, entré un code à 4 chiffres !");
+
+                }
+                for (int i = 0; i < 4; i++) // We will count the number of well placed and misplaced digits
+                {
+                    if (guess[i] == secretCode[i])
+                    {
+                        rightPlaced++;
+
+                    }
+                    else if (secretCode.Contains(guess[i]))
+                    {
+                        wrongPlaced++;
+
+                    }
+
+                }
+                
+                ShowText(rightPlaced, wrongPlaced);
+                if (guess.SequenceEqual(secretCode))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\nBravo ! Vous avez trouvé le chiffre secret");
+                    Console.ResetColor();
+                    find = true;
+
+                }
+                
+                
+
+                
+            }
+            return find;
+        }
+
+        static void SecretCodeOne(int[] secretCode)
         {
             Random random = new Random();
             int newDigit;
@@ -297,8 +382,8 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                 secretCode[i] = newDigit;
             }
         }
-
-        static void SECRETCODETWO(int[] secretCode)
+        
+        static void SecretCodeTwo(int[] secretCode)
         {
             Random random = new Random();
             int newDigit;
@@ -310,69 +395,75 @@ namespace ETML_Secret_Code_Kyllian_gregoire
             }
         }
 
-        static void SHOWTEXT(int rightPlaced, int wrongPlaced)
+        
+        static void ShowText(int rightPlaced, int wrongPlaced)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("bien placé " + rightPlaced + " mal placé " + wrongPlaced + " "); // We show the number of well placed and misplaced digits
             Console.ResetColor();
         }
-        static void SHOWCUBES(int[] guess, int[] secretCode)
+        static void ShowCubes(int[] guess, int[] secretCode)
         {
 
             int[] codeStatus = new int[4]; // 0 = incorrect, 1 = correct but misplaced, 2 = correct and well placed
             int[] resultStatus = new int[4]; // To store the status of each digit in the guess
-
-
             // First pass: check for correct and well placed digits
-
-            for (int i = 0; i < 4; i++)
+            if (guess.Length == 4)
             {
-                if (guess[i] == secretCode[i])
+                for (int i = 0; i < 4; i++)
                 {
-                    resultStatus[i] = 2; // Correct and well placed
-                    codeStatus[i] = 2; // Mark this digit in the secret code as used
-                }
-            }
-            // Second pass: check for correct but misplaced digits
-
-            for (int i = 0; i < 4; i++)
-            {
-                if (resultStatus[i] != 2) // Only check digits that are not already marked as correct and well placed
-                {
-                    for (int j = 0; j < 4; j++)
+                    if (guess[i] == secretCode[i])
                     {
-                        if (guess[i] == secretCode[j] && codeStatus[j] != 2) // Check if the digit exists in the secret code and is not already used
+                        resultStatus[i] = 2; // Correct and well placed
+                        codeStatus[i] = 2; // Mark this digit in the secret code as used
+                    }
+                }
+                // Second pass: check for correct but misplaced digits
+
+                for (int i = 0; i < 4; i++)
+                {
+                    if (resultStatus[i] != 2) // Only check digits that are not already marked as correct and well placed
+                    {
+                        for (int j = 0; j < 4; j++)
                         {
-                            resultStatus[i] = 1; // Correct but misplaced
-                            codeStatus[j] = 1; // Mark this digit in the secret code as used
-                            break;
+                            if (guess[i] == secretCode[j] && codeStatus[j] != 2) // Check if the digit exists in the secret code and is not already used
+                            {
+                                resultStatus[i] = 1; // Correct but misplaced
+                                codeStatus[j] = 1; // Mark this digit in the secret code as used
+                                break;
+                            }
                         }
                     }
                 }
+
+                // Display the results with colored cubes
+
+                for (int i = 0; i < 4; i++)
+                {
+                    if (resultStatus[i] == 2)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue; // Well placed
+                    }
+                    else if (resultStatus[i] == 1)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow; // Misplaced
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red; // Incorrect
+                    }
+                    Console.Write("■");
+                    Console.ResetColor();
+                }
             }
-
-            // Display the results with colored cubes
-
-            for (int i = 0; i < 4; i++)
+            else
             {
-                if (resultStatus[i] == 2)
-                {
-                    Console.ForegroundColor = ConsoleColor.Blue; // Well placed
-                }
-                else if (resultStatus[i] == 1)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow; // Misplaced
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red; // Incorrect
-                }
-                Console.Write("■");
-                Console.ResetColor();
+
             }
+            
         }
 
-        static void LOOSINGTIME()
+        static void LoosingTime()
         {
             Console.ForegroundColor = ConsoleColor.Cyan; // Set the text color to Cyan
             for (int i = 3; i > 0; i--) // We count down from 3 to 1
