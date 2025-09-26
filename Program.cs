@@ -261,35 +261,18 @@ namespace ETML_Secret_Code_Kyllian_gregoire
         }
         static bool UserTryOne(bool find, int[] guess, int[] secretCode, int levelChoose )
         {
-            const byte MAXTRY = 10;
             byte userTry = 0;
-            string tryInput;
-            find = false;
             ShowLevelAndOtherText(levelChoose, userTry, find, secretCode, guess);
-            userTry++;
             return find;
         }
         static bool UserTryTwo(bool find, int[] guess, int[] secretCode, int levelChoose)
         {
-            const byte MAXTRY = 10;
             byte userTry = 0;
-            string tryInput = "";
-            byte rightPlaced = 0;
-            byte wrongPlaced = 0;
-            find = false;
-            while (userTry < MAXTRY && !find) // While the user still have tries and didn't find the code
-            {
-                Console.Write($"Essai {userTry + 1}/{MAXTRY} - Entrez un code à 4 chiffres : ");
-                tryInput = Console.ReadLine();
-                find = LevelTwoOrFourPlay(levelChoose, secretCode, tryInput, guess, rightPlaced, wrongPlaced, find);
-            }
-            userTry++;
-
-
+            ShowLevelAndOtherText(levelChoose, userTry, find, secretCode, guess);
             return find;
         }
         
-        static bool LevelOneOrThreePlay(int levelChoose, int[] secretCode, string tryInput, int[] guess,bool find)
+        static bool LevelPlay(int levelChoose, int[] secretCode, string tryInput, int[] guess,bool find)
         {
             for (byte j = 0; j < 1; j++)
             {
@@ -300,7 +283,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                 }
             }
             guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-            if (levelChoose == 1)
+            if (levelChoose == 1 || levelChoose == 2)
             {
                 for (byte i = 0; i < 4; i++) // We generate the secret code with no duplicates
                 {
@@ -335,7 +318,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                     }
                     for (byte x = 0; x < 1; x++)
                     {
-                        if (levelChoose == 1)
+                        if (levelChoose == 1 || levelChoose == 2)
                         {
 
                             while (guess[x] < 1 || guess[x] > 6)
@@ -346,6 +329,15 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                             }
                         }
                         else if (levelChoose == 3)
+                        {
+                            while (guess[x] < 1 || guess[x] > 8)
+                            {
+                                Console.Write("Vous ne pouvez pas mettre un nombre au dessus de 8 ou inférieur a 1! Veuillez ressaisir un nombre : ");
+                                tryInput = Console.ReadLine();
+                                guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
+                            }
+                        }
+                        else if (levelChoose == 4)
                         {
                             while (guess[x] < 1 || guess[x] > 9)
                             {
@@ -369,126 +361,35 @@ namespace ETML_Secret_Code_Kyllian_gregoire
             }
             return find;
         }
-        static bool LevelTwoOrFourPlay(int levelChoose, int[] secretCode, string tryInput, int[] guess, byte rightPlaced, byte wrongPlaced, bool find)
-        {
-            for (byte j = 0; j < 1; j++)
-            {
-                while (!Convert.ToBoolean(int.TryParse(tryInput, out guess[j])))
-                {
-                    Console.WriteLine("Entrée invalide. Tapez un nombre en 1 et 6 sans lettre.");
-                    tryInput = Console.ReadLine(); // We reread the selection
-                }
-            }
-            guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-            if (levelChoose == 2)
-            {
-                for (byte i = 0; i < 4; i++) // We generate the secret code with no duplicates
-                {
-                    int index = Array.IndexOf(guess, guess[i], i + 1);
-                    if (index != -1)
-                    {
-                        Console.Write("Merci de ne pas mettre de doublons ! Merci de resaisir un nombre : ");
-                        tryInput = Console.ReadLine();
-                        guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-                    }
-
-                }
-            }
-                while (tryInput.Length != 4)
-            {
-                Console.WriteLine("Merci d'entré un code à 4 chiffre");
-                tryInput = Console.ReadLine();
-                guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-            }
-            if (tryInput.Length == 4)
-            { 
-                for (byte i = 0; i < 1; i++) // We generate the secret code with no duplicates
-                {
-                    guess.ToArray();
-                    int index = Array.IndexOf(guess, guess[i], i + 1);
-                    if (index != -1)
-                    {
-                        Console.WriteLine("Merci de ne pas mettre de doublons ! Merci de resaisir un nombre : ");
-                        tryInput = Console.ReadLine();
-                        guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-                        break;
-                    }
-                    for (byte x = 0; x < 1; x++)
-                    {
-                        if (levelChoose == 2)
-                        {
-
-                            while (guess[x] < 1 || guess[x] > 6)
-                            {
-                                Console.Write("Vous ne pouvez pas mettre un nombre au dessus de 6 ou inférieur a 1! Veuillez ressaisir un nombre : ");
-                                tryInput = Console.ReadLine();
-                                guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-                            }
-                        }
-                        else if (levelChoose == 4)
-                        {
-                            while (guess[x] < 1 || guess[x] > 9)
-                            {
-                                Console.Write("Vous ne pouvez pas mettre un nombre au dessus de 8 ou inférieur a 1! Veuillez ressaisir un nombre : ");
-                                tryInput = Console.ReadLine();
-                                guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-                            }
-                        }
-
-                        for (byte d = 0; d < 4; d++) // We will count the number of well placed and misplaced digits
-                        {
-                            if (guess[d] == secretCode[d])
-                            {
-                                rightPlaced++;
-
-                            }
-                            else if (secretCode.Contains(guess[d]))
-                            {
-                                wrongPlaced++;
-
-                            }
-
-                        }
-
-                        ShowText(rightPlaced, wrongPlaced);
-                        if (guess.SequenceEqual(secretCode))
-                        {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("\nBravo ! Vous avez trouvé le chiffre secret");
-                            Console.ResetColor();
-                            find = true;
-
-                        }
-
-                        rightPlaced = 0;
-                        wrongPlaced = 0;
-                    }
-                }
-            }
-            return find;
-        }
-        
+ 
         static bool ShowLevelAndOtherText(int levelChoose, byte userTry, bool find, int[] secretCode, int[] guess)
         {
             const byte MAXTRY = 10;
             string tryInput;
-            byte setCursorPos = 5;
+            byte setCursorPosPrimary = 1;
+            byte SetCursorPosSecondary = 3;
+            byte wrongPlaced = 0;
+            byte rightPlaced = 0;
             userTry = 0;
             find = false;
+            Console.WriteLine(" ");
+            Console.WriteLine("Essai: ");
             while (userTry < MAXTRY && !find) // While the user still have tries and didn't find the code
             {
-                Console.WriteLine(" ");
-                Console.WriteLine("Essai: ");
-                Console.WriteLine(" ");
-                Console.WriteLine(" ");
-                Console.Write("Essai {0}/{1} - Entrez un code à 4 chiffres : ", userTry++, MAXTRY);
+                for (int i = 0; i < 4; i++) // Ajustez le nombre selon vos besoins
+                {
+                    Console.WriteLine(new string(' ', Console.WindowWidth - 1));
+                }
+                Console.Write("Essai {0}/{1} - Entrez un code à 4 chiffres : ", ++userTry, MAXTRY);
                 tryInput = Console.ReadLine();
-                Console.SetCursorPosition(0, setCursorPos+=2);
+                Console.SetCursorPosition(0, setCursorPosPrimary+= 2);
+                Console.SetCursorPosition(0, SetCursorPosSecondary+= 2);
                 Console.WriteLine(" " + userTry + " : " + tryInput);
-                Console.Write("     ");
-                find = LevelOneOrThreePlay(levelChoose, secretCode, tryInput, guess, find);
-                Console.WriteLine();
-                
+                if (levelChoose == 1 || levelChoose == 3)
+                    find = LevelPlay(levelChoose, secretCode, tryInput, guess, find);
+                if (levelChoose == 2 || levelChoose == 4)
+                    find = LevelPlay(levelChoose, secretCode, tryInput, guess, find);
+
             }
             return find;
         }
