@@ -253,6 +253,12 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                 }
             }
             guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
+            while (tryInput.Length != MAXLENGTH)
+            {
+                Console.WriteLine("Merci d'entré un code à 4 chiffre");
+                tryInput = Console.ReadLine();
+                guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
+            }
             if (levelChoose == 1 || levelChoose == 2)
             {
                 for (byte i = 0; i < 4; i++) // We generate the secret code with no duplicates
@@ -267,25 +273,12 @@ namespace ETML_Secret_Code_Kyllian_gregoire
 
                 }
             }
-            while (tryInput.Length != MAXLENGTH)
-            {
-                Console.WriteLine("Merci d'entré un code à 4 chiffre");
-                tryInput = Console.ReadLine();
-                guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-            }
+
             if (tryInput.Length == MAXLENGTH)
             {
                 for (byte i = 0; i < 1; i++)
                 {
                     guess.ToArray();
-                    int index = Array.IndexOf(guess, guess[i], i + 1);
-                    if (index != -1)
-                    {
-                        Console.WriteLine("Merci de ne pas mettre de doublons ! Merci de resaisir un nombre : ");
-                        tryInput = Console.ReadLine();
-                        guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-                        break;
-                    }
                     for (byte x = 0; x < 1; x++)
                     {
                         if (levelChoose == 1 || levelChoose == 2)
@@ -335,7 +328,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
 
                         if (levelChoose == 1 || levelChoose == 3)
                             ShowCubes(guess, secretCode);
-                        
+
                         if (guess.SequenceEqual(secretCode))
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
@@ -346,6 +339,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                         }
                     }
                 }
+                
             }
             return find;
         }
@@ -373,6 +367,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                 for (int i = 0; i < 4; i++) // We make a for of 4 without anything inside them and when we return here we do the same like every time
                 {
                     Console.WriteLine(new string(' ', Console.WindowWidth - 1));
+                    Console.WriteLine("                                                                                      ");
                 }
                 Console.Write("Essai {0}/{1} - Entrez un code à 4 chiffres : ", ++userTry, MAXTRY);
                 tryInput = Console.ReadLine();
@@ -435,6 +430,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
         {
             int[] codeStatus = new int[4]; // 0 = incorrect, 1 = correct but misplaced, 2 = correct and well placed
             int[] resultStatus = new int[4]; // To store the status of each digit in the guess
+            int[] numbers = new int[4] { 0, 0, 0, 0 };
             // First pass: check for correct and well placed digits
             if (guess.Length == 4)
             {
@@ -454,7 +450,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                     {
                         for (byte j = 0; j < 4; j++)
                         {
-                            if (guess[i] == secretCode[j] && codeStatus[j] != 2) // Check if the digit exists in the secret code and is not already used
+                            if (guess[i] == secretCode[j] && codeStatus[j] != 2  && codeStatus[Array.IndexOf(numbers, numbers[i])] != 1) // Check if the digit exists in the secret code and is not already used
                             {
                                 resultStatus[i] = 1; // Correct but misplaced
                                 codeStatus[j] = 1; // Mark this digit in the secret code as used
