@@ -19,20 +19,19 @@ namespace ETML_Secret_Code_Kyllian_gregoire
     internal class Program
     {
         /// <summary>
-        /// The mian contains the rules board and the levels cases.
+        /// The main contains the rules board and the levels cases.
         /// </summary>
         static void Main()
         {
-            int[] guess = new int[4];
-            int[] secretCode;
-            int levelChoose;
-            bool playAgain;
-            bool find;
-            string input;
-            string answer;
-            byte userTry = 0;
-            find = true;
-            playAgain = true;
+            int[] guess = new int[4]; // Create a int table named guess with 4 cells
+            int[] secretCode; // generate a table named secret who will be initialized later
+            byte levelChoose; // Create a byte named leveChoose and  who will be initialized later- By the way lvlChoose its for the choose of the level
+            bool playAgain; // Create a boolean initialized below for if the user want to play again
+            string input; // Create a string to know what is the input of the user while the first step
+            string answer; // Create a string initialized below to know what is the answer of the user
+            byte userTry = 0; // Create a byte named userTry to know the try number of the user
+            playAgain = true; // Initialisation of the boolean named playAgain on true by default
+            answer = null; // Initialisation of the string named answer on null by default
 
             while (playAgain) // While the user want to play again
             {
@@ -79,7 +78,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                 Console.WriteLine("Votre Essai : 1430");
                 Console.WriteLine("Indice :");
 
-                // Colored Cubes
+                // Colored squares
 
                 Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write("■");
@@ -142,7 +141,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                 Console.WriteLine("Votre choix ( De 1 à 4 )");
 
                 input = Console.ReadLine();
-                while (!int.TryParse(input, out levelChoose) || levelChoose < 1 || levelChoose > 4)
+                while (!byte.TryParse(input, out levelChoose) || levelChoose < 1 || levelChoose > 4)
                 {
                     Console.WriteLine("Entrée invalide. Tapez un nombre en 1 et 4.");
                     Console.WriteLine("Votre choix ( De 1 à 4 sans Texte )"); // We reask the choice of the user
@@ -151,9 +150,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
 
                 // ╚══════════════════════════════════════ End Of Selection Of The level ════════════════════════════════════════╝
                 // ╔═════════════════════════════════════════ Level Choosen By The User ════════════════════════════════════════════╗
-
-                Random random = new Random();
-                secretCode = new int[4];
+                secretCode = new int[4]; // Generate a table with 4 cells
                 Console.WriteLine("Vous avez choisi le niveau {0}\n", levelChoose);
 
                 LoosingTime();
@@ -164,67 +161,23 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                     case 1: // Level 1
                         SecretCode(secretCode, levelChoose);
                         Console.Title = "Secret Code ─ Level 1 " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3]; // We change the title of the console to show the level
-                        find = ShowLevelAndOtherText(levelChoose, userTry, find, secretCode, guess);
+                        ShowLevelAndOtherText(levelChoose, userTry, secretCode, guess, answer, playAgain);
                         break;
                     case 2: // Level 2
                         SecretCode(secretCode, levelChoose);
                         Console.Title = "Secret Code ─ Level 2" + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
-                        find = ShowLevelAndOtherText(levelChoose, userTry, find, secretCode, guess);
+                        ShowLevelAndOtherText(levelChoose, userTry, secretCode, guess, answer, playAgain);
                         break;
                     case 3: // Level 3
                         SecretCode(secretCode, levelChoose);
                         Console.Title = "Secret Code ─ Level 3" + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
-                        find = ShowLevelAndOtherText(levelChoose, userTry, find, secretCode, guess);
+                        ShowLevelAndOtherText(levelChoose, userTry, secretCode, guess, answer, playAgain);
                         break;
                     case 4: // Level 4
                         SecretCode(secretCode, levelChoose);
                         Console.Title = "Secret Code ─ Level 4 : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3];
-                        find = ShowLevelAndOtherText(levelChoose, userTry, find, secretCode, guess);
+                        ShowLevelAndOtherText(levelChoose, userTry, secretCode, guess, answer, playAgain);
                         break;
-                }
-                if (!find) // If the user didn't find the secret code then
-                {
-                    Console.WriteLine("\nX Dommage ! Vous avez épuisé tous vos essais.\n");
-                    Console.WriteLine("Le code secret était : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3]);
-                    Console.WriteLine("\nVoulez-vous rejouer ? (o/n)");
-                    answer = Console.ReadLine();
-                    do
-                    {
-                        if (playAgain = answer.Trim().ToLower() == "o" || answer.Trim().ToLower() == "oui" || answer == "1")
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Vous allez être redirigé au menu des règles.\n");
-                            Thread.Sleep(2000);
-                        }// do automaticaly the return to the rules screen
-                        else if (playAgain = answer.Trim().ToLower() == "n" || answer.Trim().ToLower() == "non" || answer == "2")
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Merci d'avoir joué ! À bientôt.");
-                            Thread.Sleep(2000); // Wait for 2 seconds before closing
-                            playAgain = false;
-                        }
-                    } while (answer.Trim().ToLower() != "o" && answer.Trim().ToLower() != "n");
-                }
-                else
-                {
-                    do
-                    {
-                        Console.WriteLine("\nVoulez-vous rejouer ? (o/n)");
-                        answer = Console.ReadLine();
-                        if (playAgain = answer.Trim().ToLower() == "o")
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Vous allez être redirigé au menu des règles.\n");
-                            Thread.Sleep(2000);
-                        }// do automaticaly the return to the rules screen
-                        else if (playAgain = answer.Trim().ToLower() == "n")
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Merci d'avoir joué ! À bientôt.");
-                            Thread.Sleep(2000); // Wait for 2 seconds before closing
-                            playAgain = false;
-                        }
-                    } while (answer.Trim().ToLower() != "o" && answer.Trim().ToLower() != "n");
                 }
 
                 // ╚══════════════════════════════════════ End Of Level Choosen By The User ════════════════════════════════════════╝
@@ -261,7 +214,7 @@ namespace ETML_Secret_Code_Kyllian_gregoire
             }
             if (levelChoose == 1 || levelChoose == 2)
             {
-                for (byte i = 0; i < 4; i++) // We generate the secret code with no duplicates
+                for (byte i = 0; i < 4; i++) // xxx
                 {
                     int index = Array.IndexOf(guess, guess[i], i + 1);
                     if (index != -1)
@@ -276,70 +229,65 @@ namespace ETML_Secret_Code_Kyllian_gregoire
 
             if (tryInput.Length == MAXLENGTH)
             {
-                for (byte i = 0; i < 1; i++)
+                for (byte i = 0; i < 4; i++)
                 {
                     guess.ToArray();
-                    for (byte x = 0; x < 1; x++)
+                    if (levelChoose == 1 || levelChoose == 2)
                     {
-                        if (levelChoose == 1 || levelChoose == 2)
-                        {
-
-                            while (guess[x] < 1 || guess[x] > 6)
+                    
+                            while (guess[i] < 1 || guess[i] > 6)
                             {
                                 Console.Write("Vous ne pouvez pas mettre un nombre au dessus de 6 ou inférieur a 1! Veuillez ressaisir un nombre : ");
                                 tryInput = Console.ReadLine();
                                 guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
                             }
                         }
-                        else if (levelChoose == 3)
+                    else if (levelChoose == 3)
                         {
-                            while (guess[x] < 1 || guess[x] > 8)
+                            while (guess[i] < 1 || guess[i] > 8)
                             {
                                 Console.Write("Vous ne pouvez pas mettre un nombre au dessus de 8 ou inférieur a 1! Veuillez ressaisir un nombre : ");
                                 tryInput = Console.ReadLine();
                                 guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
                             }
                         }
-                        else if (levelChoose == 4)
+                    else if (levelChoose == 4)
+                    {
+                        while (guess[i] < 1)
                         {
-                            while (guess[x] < 1 || guess[x] > 9)
-                            {
-                                Console.Write("Vous ne pouvez pas mettre un nombre au dessus de 8 ou inférieur a 1! Veuillez ressaisir un nombre : ");
-                                tryInput = Console.ReadLine();
-                                guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
-                            }
+                            Console.Write("Vous ne pouvez pas mettre un nombre inférieur a 1! Veuillez ressaisir un nombre : ");
+                            tryInput = Console.ReadLine();
+                            guess = tryInput.Select(c => int.Parse(c.ToString())).ToArray();
                         }
-
-                        if (levelChoose == 2 || levelChoose == 4)
+                    }     
+                }
+                if (levelChoose == 2 || levelChoose == 4)
+                {
+                    for (int z = 0; z < 4; z++)
+                    {
+                        if (guess[z] == secretCode[z])
                         {
-                            for (int z = 0; z < 4; z++)
-                            {
-                                if (guess[z] == secretCode[z])
-                                {
-                                    rightPlaced++;
-                                }
-                                else if (secretCode.Contains(guess[z]))
-                                {
-                                    wrongPlaced++;
-                                }
-                            }
-                            ShowText(rightPlaced, wrongPlaced);
+                            rightPlaced++;
                         }
-
-                        if (levelChoose == 1 || levelChoose == 3)
-                            ShowCubes(guess, secretCode);
-
-                        if (guess.SequenceEqual(secretCode))
+                        else if (secretCode.Contains(guess[z]))
                         {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("\nBravo ! Vous avez trouvé le chiffre secret");
-                            Console.ResetColor();
-                            find = true;
-
+                            wrongPlaced++;
                         }
                     }
+                    ShowText(rightPlaced, wrongPlaced);
                 }
-                
+
+                if (levelChoose == 1 || levelChoose == 3)
+                    ShowCubes(guess, secretCode);
+
+                if (guess.SequenceEqual(secretCode))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\nBravo ! Vous avez trouvé le chiffre secret");
+                    Console.ResetColor();
+                    find = true;
+
+                }
             }
             return find;
         }
@@ -352,14 +300,14 @@ namespace ETML_Secret_Code_Kyllian_gregoire
         /// <param name="secretCode"></param>
         /// <param name="guess"></param>
         /// <returns></returns>
-        static bool ShowLevelAndOtherText(int levelChoose, byte userTry, bool find, int[] secretCode, int[] guess)
+        static void ShowLevelAndOtherText(int levelChoose, byte userTry, int[] secretCode, int[] guess, string answer, bool playAgain)
         {
-            const byte MAXTRY = 10;
-            string tryInput;
-            byte setCursorPosPrimary = 1;
-            byte SetCursorPosSecondary = 3;
-            userTry = 0;
-            find = false;
+            const byte MAXTRY = 10; // create the const byte named MAXTRY its for define the max try of a user
+            string tryInput; // Create the string named tryInput its used to define the user input for the try
+            byte setCursorPosPrimary = 1; // Create and initialize the byte named setCursorPosition at 1 thi is used below for the try text
+            bool find; // Create a boolean for if the user have find the code or not (It will be initialized below
+            userTry = 0; // Initialise the userTry to 0
+            find = false; // initialisation of the boolean named find on true by default
             Console.WriteLine(" ");
             Console.WriteLine("Essai: ");
             while (userTry < MAXTRY && !find) // While the user still have tries and didn't find the code
@@ -372,15 +320,55 @@ namespace ETML_Secret_Code_Kyllian_gregoire
                 Console.Write("Essai {0}/{1} - Entrez un code à 4 chiffres : ", ++userTry, MAXTRY);
                 tryInput = Console.ReadLine();
                 Console.SetCursorPosition(0, setCursorPosPrimary+= 2);
-                Console.SetCursorPosition(0, SetCursorPosSecondary+= 2);
+                //Console.SetCursorPosition(0, SetCursorPosSecondary+= 2);
                 Console.WriteLine(" " + userTry + " : " + tryInput);
                 Console.Write("\t");
-                if (levelChoose == 1 || levelChoose == 3)
-                    find = LevelPlay(levelChoose, secretCode, tryInput, guess, find);
-                if (levelChoose == 2 || levelChoose == 4)
-                    find = LevelPlay(levelChoose, secretCode, tryInput, guess, find);
+                find = LevelPlay(levelChoose, secretCode, tryInput, guess, find);
             }
-            return find;
+            if (!find) // If the user didn't find the secret code then
+            {
+                Console.WriteLine("\nX Dommage ! Vous avez épuisé tous vos essais.\n");
+                Console.WriteLine("Le code secret était : " + secretCode[0] + secretCode[1] + secretCode[2] + secretCode[3]);
+                Console.WriteLine("\nVoulez-vous rejouer ? (o/n)");
+                answer = Console.ReadLine();
+                do
+                {
+                    if (playAgain = answer.Trim().ToLower() == "o" || answer.Trim().ToLower() == "oui" || answer == "1")
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Vous allez être redirigé au menu des règles.\n");
+                        Thread.Sleep(2000);
+                    }// do automaticaly the return to the rules screen
+                    else if (playAgain = answer.Trim().ToLower() == "n" || answer.Trim().ToLower() == "non" || answer == "2")
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Merci d'avoir joué ! À bientôt.");
+                        Thread.Sleep(2000); // Wait for 2 seconds before closing
+                        playAgain = false;
+                    }
+                } while (answer.Trim().ToLower() != "o" && answer.Trim().ToLower() != "n");
+            }
+            else // if the user find to code
+            {
+                do
+                {
+                    Console.WriteLine("\nVoulez-vous rejouer ? (o/n)");
+                    answer = Console.ReadLine();
+                    if (playAgain = answer.Trim().ToLower() == "o")
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Vous allez être redirigé au menu des règles.\n");
+                        Thread.Sleep(2000);
+                    }// do automaticaly the return to the rules screen
+                    else if (playAgain = answer.Trim().ToLower() == "n")
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Merci d'avoir joué ! À bientôt.");
+                        Thread.Sleep(2000); // Wait for 2 seconds before closing
+                        playAgain = false;
+                    }
+                } while (answer.Trim().ToLower() != "o" && answer.Trim().ToLower() != "n");
+            }
         }
 
         /// <summary>
@@ -390,8 +378,8 @@ namespace ETML_Secret_Code_Kyllian_gregoire
         /// <param name="levelChoose"></param>
         static void SecretCode(int[] secretCode, int levelChoose)
         {
-            Random random = new Random();
-            int newDigit;
+            Random random = new Random(); // Create the variable random of type random
+            int newDigit; // Create the int NewDigit who is used to be the secret code later
             for (byte i = 0; i < 4; i++) 
             {
                 if (levelChoose == 1 || levelChoose == 2) // We generate the secret code with no duplicates
